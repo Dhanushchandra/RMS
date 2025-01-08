@@ -15,7 +15,6 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<User> userById(@PathVariable UUID id){
         User user = new User();
-        user.setId(id);
         return ResponseEntity.ok(user);
     }
 
