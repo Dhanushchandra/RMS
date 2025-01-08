@@ -28,7 +28,7 @@ public class Recipe {
     private String imagePath;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "creator_id", nullable = false, referencedColumnName = "id")
     private User user;
 
     @ManyToMany
