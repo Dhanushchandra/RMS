@@ -58,9 +58,7 @@ public class AuthController {
 
             String jwtToken = jwtService.generateToken(authentication.getName());
 
-            String username = authentication.getName();
-
-            LoginResponse loginResponse = new LoginResponse(email, username, jwtToken, "Login successful");
+            LoginResponse loginResponse = new LoginResponse(email, jwtToken, "Login successful");
 
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {

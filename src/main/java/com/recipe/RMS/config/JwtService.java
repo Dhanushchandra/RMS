@@ -42,7 +42,7 @@ public class JwtService {
         return claims.getExpiration().before(new Date());
     }
 
-    private Claims extractClaims(String token) {
+    public Claims extractClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey()) // Updated to use parserBuilder
                 .build()

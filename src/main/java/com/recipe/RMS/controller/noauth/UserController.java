@@ -1,4 +1,4 @@
-package com.recipe.RMS.controller;
+package com.recipe.RMS.controller.noauth;
 
 import com.recipe.RMS.model.User;
 import org.springframework.http.ResponseEntity;
@@ -8,9 +8,8 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/noauth/v1/user")
 public class UserController {
-
 
     @GetMapping("{id}")
     public ResponseEntity<User> userById(@PathVariable UUID id){

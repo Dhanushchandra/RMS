@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Category {
 
     @Id
@@ -25,4 +22,37 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     private List<Recipe> recipes;
+
+    public Category() {
+    }
+
+    public Category(UUID id, String name, List<Recipe> recipes) {
+        this.id = id;
+        this.name = name;
+        this.recipes = recipes;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<Recipe> recipes) {
+        this.recipes = recipes;
+    }
 }
