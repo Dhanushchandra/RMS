@@ -1,5 +1,7 @@
 package com.recipe.RMS.service;
 
+import com.recipe.RMS.dto.category.CategoryDTO;
+import com.recipe.RMS.exceptions.CustomException;
 import com.recipe.RMS.exceptions.ResourceNotFoundException;
 import com.recipe.RMS.model.Category;
 import com.recipe.RMS.repository.CategoryRepo;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -17,27 +20,45 @@ public class CategoryService {
     @Autowired
     private CategoryRepo categoryRepo;
 
-    public Category createCategory(Category category) {
-        return categoryRepo.save(category);
+    public CategoryDTO createCategory(Category category) {
+        try {
+            Category savedCategory = categoryRepo.save(category);
+            return mapToDTO(savedCategory);
+        } catch (Exception e) {
+            throw new CustomException("Error creating category", e);
+        }
     }
 
-    public Category getCategory(UUID id) {
-        return categoryRepo.findById(id)
+    public CategoryDTO getCategory(UUID id) {
+        Category category = categoryRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+        return mapToDTO(category);
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepo.findAll();
+    public List<CategoryDTO> getAllCategories() {
+        List<Category> categories = categoryRepo.findAll();
+        return categories.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
-    public Category updateCategory(UUID id, Category updatedCategory) {
-        Category existingCategory = getCategory(id);
+    public CategoryDTO updateCategory(UUID id, Category updatedCategory) {
+        Category existingCategory = categoryRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
         existingCategory.setName(updatedCategory.getName());
-        return categoryRepo.save(existingCategory);
+        Category updatedCategoryEntity = categoryRepo.save(existingCategory);
+        return mapToDTO(updatedCategoryEntity);
     }
 
     public void deleteCategory(UUID id) {
+        categoryRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         categoryRepo.deleteById(id);
+    }
+
+    private CategoryDTO mapToDTO(Category category) {
+        return new CategoryDTO(category.getId(), category.getName());
     }
 }
 
