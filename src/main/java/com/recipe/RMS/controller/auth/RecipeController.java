@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -29,6 +30,13 @@ public class RecipeController {
             @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
 
         RecipeDto recipeDTO = recipeService.createRecipe(name, description, userId, categoryIds, image);
+
+        if (image != null && !image.isEmpty()) {
+            String base64Image = Base64.getEncoder().encodeToString(image.getBytes());
+            recipeDTO.setBase64Image(base64Image);
+        }
+
+
         return new ResponseEntity<>(recipeDTO, HttpStatus.CREATED);
     }
 

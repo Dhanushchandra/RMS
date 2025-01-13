@@ -17,10 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,6 +97,15 @@ public class RecipeService {
 
         if (image != null) {
             try {
+                // Delete the old image file if it exists
+                if (recipe.getImagePath() != null) {
+                    File oldImageFile = new File(recipe.getImagePath());
+                    if (oldImageFile.exists() && !oldImageFile.delete()) {
+                        throw new CustomException("Failed to delete old image file: " + recipe.getImagePath());
+                    }
+                }
+
+                // Save the new image and update the image path
                 String imagePath = saveImage(image);
                 recipe.setImagePath(imagePath);
             } catch (IOException e) {
@@ -115,6 +121,14 @@ public class RecipeService {
     public void deleteRecipe(UUID id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Recipe not found for id: " + id));
+
+        if (recipe.getImagePath() != null) {
+            File imageFile = new File(recipe.getImagePath());
+            if (imageFile.exists() && !imageFile.delete()) {
+                throw new CustomException("Failed to delete the image file: " + recipe.getImagePath());
+            }
+        }
+
         recipeRepository.delete(recipe);
     }
 
@@ -139,6 +153,16 @@ public class RecipeService {
         dto.setDescription(recipe.getDescription());
         dto.setImagePath(recipe.getImagePath());
         dto.setCategories(recipe.getCategories().stream().map(Category::getName).collect(Collectors.toSet()));
+
+        if (recipe.getImagePath() != null) {
+            try {
+                byte[] imageBytes = Files.readAllBytes(Paths.get(recipe.getImagePath()));
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+                dto.setBase64Image(base64Image);
+            } catch (IOException e) {
+                throw new CustomException("Error reading image from disk", e);
+            }
+        }
 
         // Map the User to UserDTO
         UserDto userDTO = new UserDto();

@@ -10,6 +10,7 @@ public class RecipeDto {
     private String name;
     private String description;
     private String imagePath;
+    private String base64Image;
     private Set<String> categories;
     private UserDto user;
 
@@ -19,6 +20,14 @@ public class RecipeDto {
 
     public void setUser(UserDto user) {
         this.user = user;
+    }
+
+    public String getBase64Image() {
+        return base64Image;
+    }
+
+    public void setBase64Image(String base64Image) {
+        this.base64Image = base64Image;
     }
 
     public Set<String> getCategories() {
