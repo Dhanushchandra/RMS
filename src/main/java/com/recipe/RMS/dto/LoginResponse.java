@@ -1,10 +1,13 @@
 package com.recipe.RMS.dto;
 
+import java.util.UUID;
+
 public class LoginResponse {
 
     private String email;
     private String token;
     private String message;
+    private UUID uid;
 
     public LoginResponse() {}
 
@@ -14,7 +17,18 @@ public class LoginResponse {
         this.message = message;
     }
 
+
     // Getters and setters
+
+
+    public UUID getUid() {
+        return uid;
+    }
+
+    public void setUid(UUID uid) {
+        this.uid = uid;
+    }
+
     public String getEmail() {
         return email;
     }

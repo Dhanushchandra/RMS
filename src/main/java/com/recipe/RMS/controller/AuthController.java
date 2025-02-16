@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -58,7 +59,11 @@ public class AuthController {
 
             String jwtToken = jwtService.generateToken(authentication.getName());
 
+            Optional<User> user = userRepository.findByEmail(email);
+
+
             LoginResponse loginResponse = new LoginResponse(email, jwtToken, "Login successful");
+            loginResponse.setUid(user.get().getId());
 
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {

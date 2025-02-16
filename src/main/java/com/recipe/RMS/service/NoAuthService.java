@@ -42,6 +42,12 @@ public class NoAuthService {
         return recipes.map(this::mapToDTO);
     }
 
+    public RecipeDto getRecipe(UUID id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Recipe not found for id: " + id));
+        return mapToDTO(recipe);
+    }
+
     public Page<RecipeDto> getRecipesByCategories(List<UUID> categoryIds, Pageable pageable) {
         List<Category> categories = categoryRepository.findAllById(categoryIds);
         if (categories.isEmpty()) {

@@ -118,6 +118,7 @@ public class RecipeService {
         return mapToDTO(updatedRecipe);
     }
 
+
     public void deleteRecipe(UUID id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Recipe not found for id: " + id));
